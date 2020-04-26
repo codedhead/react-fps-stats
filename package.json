@@ -1,26 +1,43 @@
 {
-  "name": "react-stats",
-  "version": "0.0.6",
+  "name": "react-fps-stats",
+  "version": "0.1.2",
   "description": "FPS Stats in React",
-  "repository": "https://github.com/sebslomski/react-stats",
-  "author": {
-    "name": "Sebastian Slomski",
-    "email": "me@sebslomski.com"
-  },
+  "repository": "https://github.com/tibotiber/react-stats",
+  "author": "Thibaut Tiberghien <thibaut@smplrspace.com>",
   "main": "dist/index.js",
-  "licence": "MIT",
-  "keywords": ["react", "stats", "react-component"],
-  "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-preset-es2015": "^6.24.1",
-    "browserify": "^6.3.3",
-    "envify": "^3.2.0",
-    "react": "^0.12.2",
-    "reactify": "^0.17.1"
-  },
   "scripts": {
-    "build": "$(npm bin)/babel src --out-dir dist --presets es2015",
-    "example":
-      "browserify --debug --transform reactify examples/main.jsx > examples/bundle.js"
-  }
+    "build": "yarn run build:types && yarn run build:js",
+    "build:types": "tsc --emitDeclarationOnly",
+    "build:js": "babel src --out-dir lib --extensions \".ts,.tsx\" --source-maps inline"
+  },
+  "dependencies": {
+    "@babel/preset-typescript": "^7.9.0",
+    "prop-types": "^15.7.2",
+    "react": "^16.13.1"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.8.4",
+    "@babel/core": "^7.9.0",
+    "@babel/plugin-proposal-class-properties": "^7.8.3",
+    "@babel/preset-env": "^7.9.5",
+    "@babel/preset-react": "^7.9.4",
+    "@types/react": "^16.9.34",
+    "babel-eslint": "^10.1.0",
+    "eslint": "^6.8.0",
+    "eslint-config-standard": "^14.1.1",
+    "eslint-config-standard-react": "^9.2.0",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-react": "^7.19.0",
+    "eslint-plugin-standard": "^4.0.1",
+    "prettier-eslint-cli": "^5.0.0",
+    "typescript": "^3.8.3"
+  },
+  "licence": "MIT",
+  "keywords": [
+    "react",
+    "stats",
+    "react-component"
+  ]
 }

@@ -1,8 +1,8 @@
-# React-Stats
+# React FPS Stats
 
-## React Performance Monitor
+## Graphics Performance Monitor for React
 
-Inspired by https://github.com/mrdoob/stats.js
+Forked from https://github.com/sebslomski/react-stats, inspired by https://github.com/mrdoob/stats.js.
 
 ### Screenshots
 
@@ -11,29 +11,44 @@ Inspired by https://github.com/mrdoob/stats.js
 ### Usage
 
 ```javascript
-import React, { Component } from 'react';
-import { render } from 'react-dom';
-import FPSStats from 'react-stats');
+import React from "react";
+import { render } from "react-dom";
+import FPSStats from "react-fps-stats";
 
-const __DEV__ = true;
-
-const Application = () => {
+const App = () => {
   return (
-      <div>
-        <FPSStats isActive={__DEV__} /> // True by default
-      </div>
+    <div>
+      <h2 style={{ marginTop: 60 }}>Minimal example using react-fps-stats</h2>
+      <FPSStats />
+    </div>
   );
 };
 
-render(
-  <Application />,
-  document.body
-);
+render(<App />, document.body);
 ```
+
+Try it on [CodeSandbox](https://codesandbox.io/embed/github/tibotiber/react-fps-stats-example/tree/master/).
 
 ### Optional Props
 
-By default, the meter is fixed positioned in the bottom right. You can pass the
-optional props `top`, `right`, `bottom` & `left` to overrride that positioning.
-`bottom` & `right` have values by default, so pass `'auto'` as their values if
-you want to use `left` or `top` values.
+By default, the meter is fixed positioned in the top left of the screen. You can pass the optional props `top`, `right`, `bottom` & `left` to overrride that positioning. Each prop maps to the css values and can use either string or number format. `top` and `left` have values by default, so pass `'auto'` as their values if you want to use `bottom` or `right` values.
+
+## Alternatives
+
+If you are only using this for development purpose and your users don't need to see it, you can consider using the [Chrome Devtools FPS Meter](https://developer.chrome.com/devtools/docs/rendering-settings#show-fps%20meter).
+
+## Contributing
+
+This is a tiny library with little activity, no process, just reach out ;)
+
+<details>
+<summary>Publish process</summary>
+Just a reminder for the maintainer ;)
+
+- run `yarn build`
+- bump version
+- commit / push / merge PR
+- tag version `v__` to create release
+- add changelog to release note
+- run `npm publish` from dev host
+  </details>
