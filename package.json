@@ -6,47 +6,38 @@
   "author": "Thibaut Tiberghien <thibaut@smplrspace.com>",
   "main": "dist/index.js",
   "scripts": {
-    "build": "babel src -d dist",
-    "format": "prettier-eslint --write \"src/**/*.js\""
-  },
-  "lint-staged": {
-    "src/**/*.js": [
-      "prettier-eslint --write",
-      "git add"
-    ]
+    "build": "yarn run build:types && yarn run build:js",
+    "build:types": "tsc --emitDeclarationOnly",
+    "build:js": "babel src --out-dir lib --extensions \".ts,.tsx\" --source-maps inline"
   },
   "dependencies": {
-    "prop-types": "^15.6.2",
-    "react": "^16.5.2"
+    "@babel/preset-typescript": "^7.9.0",
+    "prop-types": "^15.7.2",
+    "react": "^16.13.1"
   },
   "devDependencies": {
-    "@babel/cli": "^7.1.2",
-    "@babel/core": "^7.1.2",
-    "@babel/plugin-proposal-class-properties": "^7.1.0",
-    "@babel/preset-env": "^7.1.0",
-    "@babel/preset-react": "^7.0.0",
-    "babel-eslint": "^10.0.1",
-    "eslint": "^5.6.1",
-    "eslint-config-standard": "^12.0.0",
-    "eslint-config-standard-react": "^7.0.2",
-    "eslint-plugin-import": "^2.14.0",
-    "eslint-plugin-node": "^7.0.1",
-    "eslint-plugin-promise": "^4.0.1",
-    "eslint-plugin-react": "^7.11.1",
-    "eslint-plugin-standard": "^4.0.0",
-    "husky": "^1.0.1",
-    "lint-staged": "^7.3.0",
-    "prettier-eslint-cli": "^5.0.0"
+    "@babel/cli": "^7.8.4",
+    "@babel/core": "^7.9.0",
+    "@babel/plugin-proposal-class-properties": "^7.8.3",
+    "@babel/preset-env": "^7.9.5",
+    "@babel/preset-react": "^7.9.4",
+    "@types/react": "^16.9.34",
+    "babel-eslint": "^10.1.0",
+    "eslint": "^6.8.0",
+    "eslint-config-standard": "^14.1.1",
+    "eslint-config-standard-react": "^9.2.0",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-react": "^7.19.0",
+    "eslint-plugin-standard": "^4.0.1",
+    "prettier-eslint-cli": "^5.0.0",
+    "typescript": "^3.8.3"
   },
   "licence": "MIT",
   "keywords": [
     "react",
     "stats",
     "react-component"
-  ],
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged && yarn build && git add dist"
-    }
-  }
+  ]
 }
