@@ -1,24 +1,51 @@
 import React, { useEffect, useState } from "react";
 
 export default function FPSStat() {
-  const [frame, setFrame] = useState(0);
+  //const [frame, setFrame] = useState(0);
   const [startTime, setStartTime] = useState(0);
-  const [prevTime, setPrevTime] = useState(0);
+  //const [prevTime, setPrevTime] = useState(0);
   const [fps, setFps] = useState([0]);
 
-  const calcFPS = () => {
+  useEffect(() => {
+    let afRequest = 0;
     const currentTime = +new Date();
-    setFrame(frame + 1);
-    if (currentTime > prevTime + 1000) {
-      let fpsNow = Math.round((frame * 1000) / (currentTime - prevTime));
-      let fpsList = fps.concat(fpsNow);
-      let sliceStart = Math.min(fpsList.length - 300, 0);
-      fpsList = fpsList.slice(sliceStart, fpsList.length);
-      setFps(fpsList);
-      setFrame(0);
-      setPrevTime(currentTime);
-    }
-  };
+    setStartTime(currentTime);
+    let prevTime = currentTime;
+    let frame = 0;
+    let fpsList = [0];
+
+    let calcFPS = () => {
+      const currentTime = +new Date();
+      frame = frame + 1;
+      //console.log(frame);
+      if (currentTime > prevTime + 1000) {
+        let fpsNow = Math.round((frame * 1000) / (currentTime - prevTime));
+        //fpsNow = 30;
+
+        fpsList = fpsList.concat(fpsNow);
+
+        console.log(fpsList);
+        //let sliceStart = Math.min(fpsList.length - 300, 0);
+        //fpsList = fpsList.slice(sliceStart, fpsList.length);
+        setFps(fpsList);
+        frame = 0;
+        prevTime = currentTime;
+      }
+
+      afRequest = requestAnimationFrame(calcFPS);
+    };
+
+    afRequest = requestAnimationFrame(calcFPS);
+
+    return () => {
+      //calcFPS = () => {};
+      cancelAnimationFrame(afRequest);
+    };
+  }, []);
+
+  useEffect(() => {
+    //
+  });
 
   const wrapperStyle = {
     zIndex: 999999,
@@ -49,7 +76,7 @@ export default function FPSStat() {
   };
   const barStyle = (height: number, i: number) => ({
     //position: 'absolute',
-    bottom: "0",
+    bottom: "0px",
     right: fps.length - 1 - i + "px",
     height: height + "px",
     width: "1px",
