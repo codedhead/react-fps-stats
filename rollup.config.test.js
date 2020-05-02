@@ -44,9 +44,6 @@ export default {
         "react-dom": ["render"],
       },
     }),
-    /*babel({
-      exclude: "node_modules/**",
-    }),*/
     replace({
       "process.env.NODE_ENV": production
         ? JSON.stringify("production")

@@ -1,20 +1,19 @@
 {
   "name": "react-fps-stats",
-  "version": "0.1.2",
+  "version": "0.1.0",
   "description": "FPS Stats in React",
-  "repository": "https://github.com/tibotiber/react-stats",
-  "author": "Thibaut Tiberghien <thibaut@smplrspace.com>",
+  "repository": "https://github.com/danchitnis/react-fps-stats",
+  "author": "Danial Chitnis",
   "main": "dist/index.js",
+  "license": "MIT",
   "scripts": {
-    "build": "yarn run build:types && yarn run build:js",
     "build:types": "tsc",
-    "build:js": "babel src --out-dir lib --extensions \".ts,.tsx\" --source-maps inline",
-    "start": "rollup --config rollup.config.test.js"
+    "start": "rollup --config rollup.config.test.js",
+    "build:test": "rollup --config rollup.config.test.js --environment INCLUDE_DEPS,BUILD:production",
+    "now": "now --prod"
   },
   "dependencies": {
-    "@babel/preset-typescript": "^7.9.0",
     "@types/react-dom": "^16.9.7",
-    "prop-types": "^15.7.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "rollup": "^2.7.6",
@@ -24,13 +23,6 @@
     "rollup-plugin-typescript2": "^0.27.0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.8.4",
-    "@babel/core": "^7.9.6",
-    "@babel/plugin-proposal-class-properties": "^7.8.3",
-    "@babel/preset-env": "^7.9.6",
-    "@babel/preset-react": "^7.9.4",
-    "@types/react": "^16.9.34",
-    "babel-eslint": "^10.1.0",
     "eslint": "^6.8.0",
     "eslint-config-standard": "^14.1.1",
     "eslint-config-standard-react": "^9.2.0",
@@ -39,8 +31,8 @@
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-react": "^7.19.0",
     "eslint-plugin-standard": "^4.0.1",
+    "now": "^18.0.0",
     "prettier-eslint-cli": "^5.0.0",
-    "react-scripts": "^3.4.1",
     "typescript": "^3.8.3"
   },
   "licence": "MIT",
