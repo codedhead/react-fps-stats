@@ -624,10 +624,9 @@ function checkDCE() {
 var reactDom_1 = reactDom.render;
 
 function FPSStat() {
-    //const [frame, setFrame] = useState(0);
     const [startTime, setStartTime] = react_1(0);
-    //const [prevTime, setPrevTime] = useState(0);
     const [fps, setFps] = react_1([0]);
+    const capacity = 20;
     react_2(() => {
         let afRequest = 0;
         const currentTime = +new Date();
@@ -643,10 +642,12 @@ function FPSStat() {
                 let fpsNow = Math.round((frame * 1000) / (currentTime - prevTime));
                 //fpsNow = 30;
                 fpsList = fpsList.concat(fpsNow);
-                console.log(fpsList);
-                //let sliceStart = Math.min(fpsList.length - 300, 0);
-                //fpsList = fpsList.slice(sliceStart, fpsList.length);
+                if (fpsList.length > capacity) {
+                    fpsList = fpsList.slice(1, capacity + 2);
+                }
+                //let sliceStart = Math.min(fpsList.length - capacity, 0);
                 setFps(fpsList);
+                console.log(fpsList);
                 frame = 0;
                 prevTime = currentTime;
             }
@@ -662,41 +663,29 @@ function FPSStat() {
         //
     });
     const wrapperStyle = {
-        zIndex: 999999,
-        //position: 'fixed',
-        height: "46px",
+        zIndex: 100,
+        //position: "fixed" as "fixed",
+        display: "flex",
+        flexDirection: "column",
+        height: "150px",
         width: "300px",
         padding: "3px",
-        backgroundColor: "#000",
+        //backgroundColor: "#000",
         color: "#00ffff",
-        fontSize: "9px",
-        lineHeight: "10px",
+        fontSize: "0.75em",
+        //lineHeight: "10px",
         fontFamily: "Helvetica, Arial, sans-serif",
+        fontWeight: "bold",
     };
-    const graphStyle = {
-        //position: 'absolute',
-        left: "3px",
-        right: "3px",
-        bottom: "3px",
-        height: "200px",
-        backgroundColor: "#282844",
-    };
-    const barStyle = (height, i) => ({
-        //position: 'absolute',
-        bottom: "0px",
-        right: fps.length - 1 - i + "px",
-        height: height + "px",
-        width: "1px",
-        backgroundColor: "#00ffff",
-    });
     const maxFps = Math.max.apply(Math.max, fps);
+    const barWidth = 100 / capacity;
     return (react.createElement("div", { style: wrapperStyle },
-        react.createElement("span", null,
+        react.createElement("span", { style: { zIndex: 101 } },
             fps[fps.length - 1],
             " FPS"),
-        react.createElement("div", { style: graphStyle }, fps.map((fps, i) => {
-            const height = (300 * fps) / maxFps;
-            return react.createElement("div", { key: `fps-${i}`, style: barStyle(height, i) });
+        react.createElement("svg", { style: { height: "150px", width: "300px", overflow: "visible" } }, fps.map((fpsNow, i) => {
+            const height = (100 * fpsNow) / maxFps;
+            return (react.createElement("rect", { x: `${100 - barWidth - i * barWidth}%`, y: `${100 - height}%`, width: `${barWidth * 1.2}%`, height: `${height}%`, fill: "#00ffff" }));
         }))));
 }
 
