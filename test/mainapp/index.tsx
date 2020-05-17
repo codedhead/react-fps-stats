@@ -4,7 +4,7 @@ import FPSStat from "../../src";
 
 export default function MainApp() {
   return (
-    <div>
+    <div style={{ width: "30%" }}>
       <FPSStat />
     </div>
   );

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 export default function FPSStat() {
-  const [startTime, setStartTime] = useState(0);
+  //const [startTime, setStartTime] = useState(0);
   const [fps, setFps] = useState([0]);
 
   const capacity = 20;
@@ -9,7 +9,7 @@ export default function FPSStat() {
   useEffect(() => {
     let afRequest = 0;
     const currentTime = +new Date();
-    setStartTime(currentTime);
+    //setStartTime(currentTime);
     let prevTime = currentTime;
     let frame = 0;
     let fpsList = [0];
@@ -53,16 +53,13 @@ export default function FPSStat() {
 
   const wrapperStyle = {
     zIndex: 100,
-    //position: "fixed" as "fixed",
     display: "flex",
     flexDirection: "column" as "column",
-    height: "150px",
-    width: "300px",
+    height: "100%",
+    width: "100%",
     padding: "3px",
-    //backgroundColor: "#000",
     color: "#00ffff",
     fontSize: "0.75em",
-    //lineHeight: "10px",
     fontFamily: "Helvetica, Arial, sans-serif",
     fontWeight: "bold" as "bold",
   };
@@ -73,11 +70,12 @@ export default function FPSStat() {
   return (
     <div style={wrapperStyle}>
       <span style={{ zIndex: 101 }}>{fps[fps.length - 1]} FPS</span>
-      <svg style={{ height: "150px", width: "300px", overflow: "visible" }}>
+      <svg style={{ height: "100%", width: "100%", overflow: "visible" }}>
         {fps.map((fpsNow, i) => {
-          const height = (100 * fpsNow) / maxFps;
+          const height = fpsNow == 0 ? 0 : (100 * fpsNow) / maxFps;
           return (
             <rect
+              key={i}
               x={`${100 - barWidth - i * barWidth}%`}
               y={`${100 - height}%`}
               width={`${barWidth * 1.2}%`}

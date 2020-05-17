@@ -624,13 +624,13 @@ function checkDCE() {
 var reactDom_1 = reactDom.render;
 
 function FPSStat() {
-    const [startTime, setStartTime] = react_1(0);
+    //const [startTime, setStartTime] = useState(0);
     const [fps, setFps] = react_1([0]);
     const capacity = 20;
     react_2(() => {
         let afRequest = 0;
         const currentTime = +new Date();
-        setStartTime(currentTime);
+        //setStartTime(currentTime);
         let prevTime = currentTime;
         let frame = 0;
         let fpsList = [0];
@@ -664,16 +664,13 @@ function FPSStat() {
     });
     const wrapperStyle = {
         zIndex: 100,
-        //position: "fixed" as "fixed",
         display: "flex",
         flexDirection: "column",
-        height: "150px",
-        width: "300px",
+        height: "100%",
+        width: "100%",
         padding: "3px",
-        //backgroundColor: "#000",
         color: "#00ffff",
         fontSize: "0.75em",
-        //lineHeight: "10px",
         fontFamily: "Helvetica, Arial, sans-serif",
         fontWeight: "bold",
     };
@@ -683,14 +680,14 @@ function FPSStat() {
         react.createElement("span", { style: { zIndex: 101 } },
             fps[fps.length - 1],
             " FPS"),
-        react.createElement("svg", { style: { height: "150px", width: "300px", overflow: "visible" } }, fps.map((fpsNow, i) => {
-            const height = (100 * fpsNow) / maxFps;
-            return (react.createElement("rect", { x: `${100 - barWidth - i * barWidth}%`, y: `${100 - height}%`, width: `${barWidth * 1.2}%`, height: `${height}%`, fill: "#00ffff" }));
+        react.createElement("svg", { style: { height: "100%", width: "100%", overflow: "visible" } }, fps.map((fpsNow, i) => {
+            const height = fpsNow == 0 ? 0 : (100 * fpsNow) / maxFps;
+            return (react.createElement("rect", { key: i, x: `${100 - barWidth - i * barWidth}%`, y: `${100 - height}%`, width: `${barWidth * 1.2}%`, height: `${height}%`, fill: "#00ffff" }));
         }))));
 }
 
 function MainApp() {
-    return (react.createElement("div", null,
+    return (react.createElement("div", { style: { width: "30%" } },
         react.createElement(FPSStat, null)));
 }
 

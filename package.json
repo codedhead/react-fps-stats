@@ -1,39 +1,48 @@
 {
   "name": "react-fps-stats",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "FPS Stats in React",
   "repository": "https://github.com/danchitnis/react-fps-stats",
   "author": "Danial Chitnis",
-  "main": "dist/index.js",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "typings": "./dist/index.d.ts",
   "license": "MIT",
   "scripts": {
     "build:types": "tsc",
     "start": "rollup --config rollup.config.test.js",
-    "build:test": "rollup --config rollup.config.test.js --environment INCLUDE_DEPS,BUILD:production",
+    "build": "rollup --config rollup.config.js",
     "now": "now --prod"
   },
+  "peerDependencies": {
+    "@types/react": "^16.9.35",
+    "@types/react-dom": "^16.9.8",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1"
+  },
   "dependencies": {
-    "@types/react-dom": "^16.9.7",
+    "@types/react-dom": "^16.9.8",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "rollup": "^2.7.6",
+    "rollup": "^2.10.2",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-peer-deps-external": "^2.2.2",
     "rollup-plugin-replace": "^2.2.0",
-    "rollup-plugin-typescript2": "^0.27.0"
+    "rollup-plugin-typescript2": "^0.27.1"
   },
   "devDependencies": {
-    "eslint": "^6.8.0",
+    "eslint": "^7.0.0",
     "eslint-config-standard": "^14.1.1",
     "eslint-config-standard-react": "^9.2.0",
     "eslint-plugin-import": "^2.20.2",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.1",
-    "eslint-plugin-react": "^7.19.0",
+    "eslint-plugin-react": "^7.20.0",
     "eslint-plugin-standard": "^4.0.1",
-    "now": "^18.0.0",
+    "now": "^19.0.1",
     "prettier-eslint-cli": "^5.0.0",
-    "typescript": "^3.8.3"
+    "typescript": "^3.9.2"
   },
   "licence": "MIT",
   "keywords": [
