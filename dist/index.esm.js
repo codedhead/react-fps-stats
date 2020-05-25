@@ -1,14 +1,9 @@
-'use strict';
-
-function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
-
-var React = require('react');
-var React__default = _interopDefault(React);
+import React, { useState, useEffect } from 'react';
 
 const baseColor = "rgba(0,255,255,1)";
 function FPSStat({ color, fontSize, capacity }) {
-    const [fps, setFps] = React.useState([0]);
-    React.useEffect(() => {
+    const [fps, setFps] = useState([0]);
+    useEffect(() => {
         let afRequest = 0;
         const currentTime = +new Date();
         let prevTime = currentTime;
@@ -49,15 +44,15 @@ function FPSStat({ color, fontSize, capacity }) {
     };
     const maxFps = Math.max.apply(Math.max, fps);
     const barWidth = 100 / capacity;
-    return (React__default.createElement("div", { style: wrapperStyle },
-        React__default.createElement("span", { style: { zIndex: 101 } },
+    return (React.createElement("div", { style: wrapperStyle },
+        React.createElement("span", { style: { zIndex: 101 } },
             fps[fps.length - 1],
             " FPS"),
-        React__default.createElement("svg", { style: { height: "100%", width: "100%", overflow: "visible" } }, fps.map((fpsNow, i) => {
+        React.createElement("svg", { style: { height: "100%", width: "100%", overflow: "visible" } }, fps.map((fpsNow, i) => {
             const height = fpsNow == 0 ? 0 : (100 * fpsNow) / maxFps;
-            return (React__default.createElement("rect", { key: i, x: `${100 - barWidth - i * barWidth}%`, y: `${100 - height}%`, width: `${barWidth * 1.2}%`, height: `${height}%`, fill: color == undefined ? baseColor : color }));
+            return (React.createElement("rect", { key: i, x: `${100 - barWidth - i * barWidth}%`, y: `${100 - height}%`, width: `${barWidth * 1.2}%`, height: `${height}%`, fill: color == undefined ? baseColor : color }));
         }))));
 }
 
-module.exports = FPSStat;
-//# sourceMappingURL=index.js.map
+export default FPSStat;
+//# sourceMappingURL=index.esm.js.map

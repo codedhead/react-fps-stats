@@ -623,31 +623,26 @@ function checkDCE() {
 });
 var reactDom_1 = reactDom.render;
 
-function FPSStat() {
-    //const [startTime, setStartTime] = useState(0);
+const baseColor = "rgba(0,255,255,1)";
+function FPSStat({ color, fontSize, capacity }) {
     const [fps, setFps] = react_1([0]);
-    const capacity = 20;
     react_2(() => {
         let afRequest = 0;
         const currentTime = +new Date();
-        //setStartTime(currentTime);
         let prevTime = currentTime;
         let frame = 0;
         let fpsList = [0];
         let calcFPS = () => {
             const currentTime = +new Date();
             frame = frame + 1;
-            //console.log(frame);
             if (currentTime > prevTime + 1000) {
                 let fpsNow = Math.round((frame * 1000) / (currentTime - prevTime));
-                //fpsNow = 30;
                 fpsList = fpsList.concat(fpsNow);
                 if (fpsList.length > capacity) {
                     fpsList = fpsList.slice(1, capacity + 2);
                 }
-                //let sliceStart = Math.min(fpsList.length - capacity, 0);
                 setFps(fpsList);
-                console.log(fpsList);
+                //console.log(fpsList);
                 frame = 0;
                 prevTime = currentTime;
             }
@@ -655,13 +650,9 @@ function FPSStat() {
         };
         afRequest = requestAnimationFrame(calcFPS);
         return () => {
-            //calcFPS = () => {};
             cancelAnimationFrame(afRequest);
         };
     }, []);
-    react_2(() => {
-        //
-    });
     const wrapperStyle = {
         zIndex: 100,
         display: "flex",
@@ -669,8 +660,8 @@ function FPSStat() {
         height: "100%",
         width: "100%",
         padding: "3px",
-        color: "#00ffff",
-        fontSize: "0.75em",
+        color: color == undefined ? baseColor : color,
+        fontSize: fontSize == undefined ? "0.75em" : fontSize,
         fontFamily: "Helvetica, Arial, sans-serif",
         fontWeight: "bold",
     };
@@ -682,13 +673,13 @@ function FPSStat() {
             " FPS"),
         react.createElement("svg", { style: { height: "100%", width: "100%", overflow: "visible" } }, fps.map((fpsNow, i) => {
             const height = fpsNow == 0 ? 0 : (100 * fpsNow) / maxFps;
-            return (react.createElement("rect", { key: i, x: `${100 - barWidth - i * barWidth}%`, y: `${100 - height}%`, width: `${barWidth * 1.2}%`, height: `${height}%`, fill: "#00ffff" }));
+            return (react.createElement("rect", { key: i, x: `${100 - barWidth - i * barWidth}%`, y: `${100 - height}%`, width: `${barWidth * 1.2}%`, height: `${height}%`, fill: color == undefined ? baseColor : color }));
         }))));
 }
 
 function MainApp() {
     return (react.createElement("div", { style: { width: "30%" } },
-        react.createElement(FPSStat, null)));
+        react.createElement(FPSStat, { capacity: 20 })));
 }
 
 reactDom.render(react.createElement(react.StrictMode, null,

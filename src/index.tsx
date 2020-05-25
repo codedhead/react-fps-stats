@@ -1,15 +1,20 @@
 import React, { useEffect, useState } from "react";
 
-export default function FPSStat() {
-  //const [startTime, setStartTime] = useState(0);
-  const [fps, setFps] = useState([0]);
+type Props = {
+  color?: string;
+  fontSize?: string;
+  capacity: number;
+};
 
-  const capacity = 20;
+const baseColor = "rgba(0,255,255,1)";
+
+export default function FPSStat({ color, fontSize, capacity }: Props): JSX.Element {
+  const [fps, setFps] = useState([0]);
 
   useEffect(() => {
     let afRequest = 0;
     const currentTime = +new Date();
-    //setStartTime(currentTime);
+
     let prevTime = currentTime;
     let frame = 0;
     let fpsList = [0];
@@ -17,10 +22,9 @@ export default function FPSStat() {
     let calcFPS = () => {
       const currentTime = +new Date();
       frame = frame + 1;
-      //console.log(frame);
+
       if (currentTime > prevTime + 1000) {
         let fpsNow = Math.round((frame * 1000) / (currentTime - prevTime));
-        //fpsNow = 30;
 
         fpsList = fpsList.concat(fpsNow);
 
@@ -28,10 +32,8 @@ export default function FPSStat() {
           fpsList = fpsList.slice(1, capacity + 2);
         }
 
-        //let sliceStart = Math.min(fpsList.length - capacity, 0);
-
         setFps(fpsList);
-        console.log(fpsList);
+        //console.log(fpsList);
         frame = 0;
         prevTime = currentTime;
       }
@@ -42,14 +44,9 @@ export default function FPSStat() {
     afRequest = requestAnimationFrame(calcFPS);
 
     return () => {
-      //calcFPS = () => {};
       cancelAnimationFrame(afRequest);
     };
   }, []);
-
-  useEffect(() => {
-    //
-  });
 
   const wrapperStyle = {
     zIndex: 100,
@@ -58,8 +55,8 @@ export default function FPSStat() {
     height: "100%",
     width: "100%",
     padding: "3px",
-    color: "#00ffff",
-    fontSize: "0.75em",
+    color: color == undefined ? baseColor : color,
+    fontSize: fontSize == undefined ? "0.75em" : fontSize,
     fontFamily: "Helvetica, Arial, sans-serif",
     fontWeight: "bold" as "bold",
   };
@@ -80,7 +77,7 @@ export default function FPSStat() {
               y={`${100 - height}%`}
               width={`${barWidth * 1.2}%`}
               height={`${height}%`}
-              fill={"#00ffff"}
+              fill={color == undefined ? baseColor : color}
             />
           );
         })}

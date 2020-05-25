@@ -11,6 +11,11 @@ export default {
       format: "cjs",
       sourcemap: true,
     },
+    {
+      file: "./dist/index.esm.js",
+      format: "esm",
+      sourcemap: true,
+    },
   ],
   plugins: [
     external(),

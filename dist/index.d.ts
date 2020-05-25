@@ -1,2 +1,8 @@
 /// <reference types="react" />
-export default function FPSStat(): JSX.Element;
+declare type Props = {
+    color?: string;
+    fontSize?: string;
+    capacity: number;
+};
+export default function FPSStat({ color, fontSize, capacity }: Props): JSX.Element;
+export {};
