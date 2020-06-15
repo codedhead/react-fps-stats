@@ -1,8 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 
-const baseColor = "rgba(0,255,255,1)";
-function FPSStat({ color, fontSize, capacity }) {
+const baseBarColor = "rgba(0,255,255,1)";
+const baseFontColor = "rgba(0,255,255,1)";
+function FPSStat({ fontColor, fontSize, barColor, capacity }) {
     const [fps, setFps] = useState([0]);
+    const canvasMain = useRef(null);
+    //let ctx: CanvasRenderingContext2D;
     useEffect(() => {
         let afRequest = 0;
         const currentTime = +new Date();
@@ -30,6 +33,23 @@ function FPSStat({ color, fontSize, capacity }) {
             cancelAnimationFrame(afRequest);
         };
     }, []);
+    useEffect(() => {
+        const maxFps = Math.max.apply(Math.max, fps);
+        if (canvasMain.current) {
+            const ctx = canvasMain.current.getContext("2d");
+            const w = canvasMain.current.width;
+            const h = canvasMain.current.height;
+            if (ctx) {
+                ctx.clearRect(0, 0, w, h);
+                ctx.fillStyle = barColor ? barColor : baseBarColor;
+                fps.forEach((e, i) => {
+                    const rh = e / maxFps;
+                    const ri = capacity - i - 1;
+                    ctx.fillRect((ri * w) / capacity, h * (1 - rh), w / capacity, rh * h);
+                });
+            }
+        }
+    }, [fps]);
     const wrapperStyle = {
         zIndex: 100,
         display: "flex",
@@ -37,21 +57,19 @@ function FPSStat({ color, fontSize, capacity }) {
         height: "100%",
         width: "100%",
         padding: "3px",
-        color: color == undefined ? baseColor : color,
+        color: fontColor == undefined ? baseFontColor : fontColor,
         fontSize: fontSize == undefined ? "0.75em" : fontSize,
         fontFamily: "Helvetica, Arial, sans-serif",
         fontWeight: "bold",
     };
-    const maxFps = Math.max.apply(Math.max, fps);
-    const barWidth = 100 / capacity;
+    const canvasStyle = {
+        width: "100%",
+    };
     return (React.createElement("div", { style: wrapperStyle },
         React.createElement("span", { style: { zIndex: 101 } },
             fps[fps.length - 1],
             " FPS"),
-        React.createElement("svg", { style: { height: "100%", width: "100%", overflow: "visible" } }, fps.map((fpsNow, i) => {
-            const height = fpsNow == 0 ? 0 : (100 * fpsNow) / maxFps;
-            return (React.createElement("rect", { key: i, x: `${100 - barWidth - i * barWidth}%`, y: `${100 - height}%`, width: `${barWidth * 1.2}%`, height: `${height}%`, fill: color == undefined ? baseColor : color }));
-        }))));
+        React.createElement("canvas", { ref: canvasMain, style: canvasStyle })));
 }
 
 export default FPSStat;

@@ -1,15 +1,20 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 
 type Props = {
-  color?: string;
+  barColor?: string;
+  fontColor?: string;
   fontSize?: string;
   capacity: number;
 };
 
-const baseColor = "rgba(0,255,255,1)";
+const baseBarColor = "rgba(0,255,255,1)";
+const baseFontColor = "rgba(0,255,255,1)";
 
-export default function FPSStat({ color, fontSize, capacity }: Props): JSX.Element {
+export default function FPSStat({ fontColor, fontSize, barColor, capacity }: Props): JSX.Element {
   const [fps, setFps] = useState([0]);
+
+  const canvasMain = useRef<HTMLCanvasElement>(null);
+  //let ctx: CanvasRenderingContext2D;
 
   useEffect(() => {
     let afRequest = 0;
@@ -48,6 +53,24 @@ export default function FPSStat({ color, fontSize, capacity }: Props): JSX.Eleme
     };
   }, []);
 
+  useEffect(() => {
+    const maxFps = Math.max.apply(Math.max, fps);
+    if (canvasMain.current) {
+      const ctx = canvasMain.current.getContext("2d");
+      const w = canvasMain.current.width;
+      const h = canvasMain.current.height;
+      if (ctx) {
+        ctx.clearRect(0, 0, w, h);
+        ctx.fillStyle = barColor ? barColor : baseBarColor;
+        fps.forEach((e, i) => {
+          const rh = e / maxFps;
+          const ri = capacity - i - 1;
+          ctx.fillRect((ri * w) / capacity, h * (1 - rh), w / capacity, rh * h);
+        });
+      }
+    }
+  }, [fps]);
+
   const wrapperStyle = {
     zIndex: 100,
     display: "flex",
@@ -55,33 +78,21 @@ export default function FPSStat({ color, fontSize, capacity }: Props): JSX.Eleme
     height: "100%",
     width: "100%",
     padding: "3px",
-    color: color == undefined ? baseColor : color,
+    color: fontColor == undefined ? baseFontColor : fontColor,
     fontSize: fontSize == undefined ? "0.75em" : fontSize,
     fontFamily: "Helvetica, Arial, sans-serif",
     fontWeight: "bold" as "bold",
   };
 
-  const maxFps = Math.max.apply(Math.max, fps);
-  const barWidth = 100 / capacity;
+  const canvasStyle = {
+    width: "100%",
+    //height: "100%",
+  };
 
   return (
     <div style={wrapperStyle}>
       <span style={{ zIndex: 101 }}>{fps[fps.length - 1]} FPS</span>
-      <svg style={{ height: "100%", width: "100%", overflow: "visible" }}>
-        {fps.map((fpsNow, i) => {
-          const height = fpsNow == 0 ? 0 : (100 * fpsNow) / maxFps;
-          return (
-            <rect
-              key={i}
-              x={`${100 - barWidth - i * barWidth}%`}
-              y={`${100 - height}%`}
-              width={`${barWidth * 1.2}%`}
-              height={`${height}%`}
-              fill={color == undefined ? baseColor : color}
-            />
-          );
-        })}
-      </svg>
+      <canvas ref={canvasMain} style={canvasStyle}></canvas>
     </div>
   );
 }
