@@ -1,60 +1,70 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useMemo } from "react";
 
 type Props = {
   barColor?: string;
   fontColor?: string;
   fontSize?: string;
   capacity: number;
+  paused?: boolean;
 };
 
 const baseBarColor = "rgba(0,255,255,1)";
 const baseFontColor = "rgba(0,255,255,1)";
 
-export default function FPSStat({ fontColor, fontSize, barColor, capacity }: Props): JSX.Element {
-  const [fps, setFps] = useState([0]);
-
-  const canvasMain = useRef<HTMLCanvasElement>(null);
-  //let ctx: CanvasRenderingContext2D;
+export default function FPSStat({ fontColor, fontSize, barColor, capacity, paused }: Props): JSX.Element {
+  const [fpsPointer, setFpsPointer] = useState(0);
+  const fpsPointerRef = useRef(0);
+  const prevTime = useRef(performance.now());
+  const frame = useRef(0);
+  const raf = useRef(0);
 
   useEffect(() => {
-    let afRequest = 0;
-    const currentTime = +new Date();
+    fpsPointerRef.current = fpsPointer;
+  });
 
-    let prevTime = currentTime;
-    let frame = 0;
-    let fpsList = [0];
+  const fpsList = useMemo(() => {
+    const f = new Array(capacity);
+    f.fill(0, 0);
+    return f;
+  }, [capacity]);
 
-    let calcFPS = () => {
-      const currentTime = +new Date();
-      frame = frame + 1;
+  const canvasMain = useRef<HTMLCanvasElement>(null);
 
-      if (currentTime > prevTime + 1000) {
-        let fpsNow = Math.round((frame * 1000) / (currentTime - prevTime));
+  const calcFPS = () => {
+    const currentTime = performance.now();
+    frame.current = frame.current + 1;
+    if (currentTime > prevTime.current + 1000) {
+      const fpsNow = Math.round((frame.current * 1000) / (currentTime - prevTime.current));
+      fpsList[fpsPointerRef.current] = fpsNow;
+      setFpsPointer((fpsPointerRef.current + 1) % capacity);
+      frame.current = 0;
+      prevTime.current = currentTime;
+    }
+    raf.current = requestAnimationFrame(calcFPS);
+  };
 
-        fpsList = fpsList.concat(fpsNow);
-
-        if (fpsList.length > capacity) {
-          fpsList = fpsList.slice(1, capacity + 2);
-        }
-
-        setFps(fpsList);
-        //console.log(fpsList);
-        frame = 0;
-        prevTime = currentTime;
-      }
-
-      afRequest = requestAnimationFrame(calcFPS);
-    };
-
-    afRequest = requestAnimationFrame(calcFPS);
-
-    return () => {
-      cancelAnimationFrame(afRequest);
-    };
+  useEffect(() => {
+    if (!raf.current) {
+      raf.current = requestAnimationFrame(calcFPS);
+    }
+    return () => cancelAnimationFrame(raf.current);
   }, []);
 
   useEffect(() => {
-    const maxFps = Math.max.apply(Math.max, fps);
+    if (paused) {
+      if (raf.current) {
+        cancelAnimationFrame(raf.current);
+      }
+      raf.current = 0;
+    } else {
+      if (!raf.current) {
+        raf.current = requestAnimationFrame(calcFPS);
+      }
+    }
+  }, [paused]);
+
+  useEffect(() => {
+    const maxFps = Math.max.apply(Math.max, fpsList);
     if (canvasMain.current) {
       const ctx = canvasMain.current.getContext("2d");
       const w = canvasMain.current.width;
@@ -62,14 +72,14 @@ export default function FPSStat({ fontColor, fontSize, barColor, capacity }: Pro
       if (ctx) {
         ctx.clearRect(0, 0, w, h);
         ctx.fillStyle = barColor ? barColor : baseBarColor;
-        fps.forEach((e, i) => {
-          const rh = e / maxFps;
-          const ri = capacity - i - 1;
+        for (let i = 0; i < capacity; i++) {
+          const ri = (i - fpsPointer + capacity) % capacity;
+          const rh = fpsList[i] / maxFps;
           ctx.fillRect((ri * w) / capacity, h * (1 - rh), w / capacity, rh * h);
-        });
+        }
       }
     }
-  }, [fps]);
+  }, [fpsPointer]);
 
   const wrapperStyle = {
     zIndex: 100,
@@ -91,7 +101,7 @@ export default function FPSStat({ fontColor, fontSize, barColor, capacity }: Pro
 
   return (
     <div style={wrapperStyle}>
-      <span style={{ zIndex: 101 }}>{fps[fps.length - 1]} FPS</span>
+      <span style={{ zIndex: 101 }}>{fpsList[(fpsPointer + capacity - 1) % capacity]} FPS</span>
       <canvas ref={canvasMain} style={canvasStyle}></canvas>
     </div>
   );

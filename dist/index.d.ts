@@ -4,6 +4,7 @@ declare type Props = {
     fontColor?: string;
     fontSize?: string;
     capacity: number;
+    paused?: boolean;
 };
-export default function FPSStat({ fontColor, fontSize, barColor, capacity }: Props): JSX.Element;
+export default function FPSStat({ fontColor, fontSize, barColor, capacity, paused }: Props): JSX.Element;
 export {};
